@@ -1,26 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { Switch, Route, withRouter } from "react-router-dom";
+import Layout from "./hoc/Layout/Layout.jsx";
+import Auth from "./pages/authentication";
+import Articles from "./pages/articles";
+import Cms from "./pages/cms";
 
-function App() {
+const App = () => {
+  const user = JSON.parse(window.localStorage.getItem("user"));
+  const isUserAuthenticated = user ? true : false;
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Layout isUserAuthenticated={isUserAuthenticated} user={user}>
+        <Switch>
+          <Route
+            path="/"
+            exact
+            render={props => (
+              <Auth isUserAuthenticated={isUserAuthenticated} {...props} />
+            )}
+          />
+          <Route
+            path="/articles"
+            exact
+            render={props => (
+              <Articles
+                isUserAuthenticated={isUserAuthenticated}
+                {...props}
+              />
+            )}
+          />
+
+          <Route
+            path="/cms"
+            exact
+            render={props => (
+              <Cms
+                isUserAuthenticated={isUserAuthenticated}
+                {...props}
+              />
+            )}
+          />
+        </Switch>
+      </Layout>
     </div>
   );
-}
+};
 
-export default App;
+export default withRouter(App);
