@@ -5,6 +5,7 @@ import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { uniqueKeyGenerator } from "../../helpers/uniqueKeyGenerator";
+import { Redirect } from "react-router-dom";
 
 const articles = JSON.parse(window.localStorage.getItem("articles")) || [];
 
@@ -93,15 +94,17 @@ export default class Cms extends PureComponent {
 
   render() {
     const { article, loading, isUpdate } = this.state;
-    console.log("article =>", article);
-    console.log("loading =>", loading);
-
+     const { isUserAuthenticated } = this.props;
+     if (!isUserAuthenticated) {
+       return <Redirect to="/" />;
+     }
     if (loading) {
       return <button>loading</button>;
     }
+     
     return (
       <div className="cms-page">
-        <h1>Welcome to cms</h1>
+        <h1 className="text-muted">Articles CMS</h1>
         <form onSubmit={this.submitFormHandler}>
           <div className="form-group">
             <label>Article Title</label>
@@ -146,7 +149,7 @@ export default class Cms extends PureComponent {
             onEditorStateChange={this.onEditorStateChange}
           />
           <div className="d-flex justify-content-center flex-column">
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-success">
               {isUpdate ? "Update Article" : "Add Article"}
             </button>
           </div>
