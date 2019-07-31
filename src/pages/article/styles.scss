@@ -1,0 +1,19 @@
+.article {
+  img {
+    height: 450px;
+    width: 100%;
+    object-fit: contain;
+  }
+  .rdw-editor-toolbar {
+    display: none;
+  }
+  .rdw-editor-main {
+    .rdw-link-decorator-wrapper {
+      &:hover {
+        .rdw-link-decorator-icon {
+          display: none !important;
+        }
+      }
+    }
+  }
+}
