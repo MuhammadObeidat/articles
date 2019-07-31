@@ -5,6 +5,7 @@ import Layout from "./hoc/Layout/Layout.jsx";
 import Auth from "./pages/authentication";
 import Articles from "./pages/articles";
 import Cms from "./pages/cms";
+import Article from "./pages/article";
 
 const App = () => {
   const user = JSON.parse(window.localStorage.getItem("user"));
@@ -30,15 +31,19 @@ const App = () => {
               />
             )}
           />
+          <Route
+            path="/details"
+            exact
+            render={props => (
+              <Article isUserAuthenticated={isUserAuthenticated} {...props} />
+            )}
+          />
 
           <Route
             path="/cms"
             exact
             render={props => (
-              <Cms
-                isUserAuthenticated={isUserAuthenticated}
-                {...props}
-              />
+              <Cms isUserAuthenticated={isUserAuthenticated} {...props} />
             )}
           />
         </Switch>
