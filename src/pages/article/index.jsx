@@ -37,7 +37,7 @@ export default class Article extends Component {
             <div className="card mb-3">
               <img className="card-img-top" src={article.image} alt="" />
               <div className="card-body">
-                <h5 className="card-title">{article.title}</h5>
+                <h2 className="card-title">{article.title}</h2>
                 <Editor
                   editorState={EditorState.createWithContent(
                     convertFromRaw(JSON.parse(article.desc))

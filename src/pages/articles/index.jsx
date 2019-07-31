@@ -23,42 +23,32 @@ export default props => {
   const editArticle = item => {
     props.history.push("/cms?id=" + item.id);
   };
-
   
   const articles = JSON.parse(window.localStorage.getItem("articles")) || [];
-  console.log("articles =>", articles);
-
   return (
     <div className="container">
       <div className="articles card-deck">
-        {articles &&
+        {articles.length ? (
           articles.map((item, index) => {
             return (
-              <div
-                className="card mb-3"
-                key={uniqueKeyGenerator(index)}
-              >
+              <div className="card mb-3" key={uniqueKeyGenerator(index)}>
                 <div onClick={() => showArticle(item)}>
-                  <img
-                    className="card-img-top"
-                    src={item.image}
-                    alt=""
-                  />
+                  <img className="card-img-top" src={item.image} alt="" />
                   <div className="card-body">
                     <h5 className="card-title">{item.title}</h5>
                     <p>
-                      {cutSentence(
-                        item.decriptionText,
-                        true,
-                        200,
-                        "..."
-                      )}
+                      {cutSentence(item.decriptionText, true, 200, "...")}
                     </p>
                   </div>
                 </div>
 
                 <div className="card-footer d-flex">
-                  <span className="text-muted">see more</span>
+                  <span
+                    onClick={() => showArticle(item)}
+                    className="text-muted"
+                  >
+                    see more
+                  </span>
                   <span
                     onClick={() => editArticle(item)}
                     className="ml-auto text-muted"
@@ -68,12 +58,18 @@ export default props => {
                 </div>
               </div>
             );
-          })}
-      </div>
-
-      <button onClick={addArticle} className="btn btn-info mt-5">
-        Add new article
+          })
+        ) : (
+          <div className="poster">
+            <h1>There's no articles uploaded yet ... </h1>
+            <p className="text-muted">You can start uploading your articles by clicking on button down below</p>
+             <button onClick={addArticle} className="btn btn-info mt-3">
+        Add article
       </button>
+          </div>
+        )}
+      </div>
+     
     </div>
   );
 };

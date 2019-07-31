@@ -1,4 +1,9 @@
 .articles {
+  .poster {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+  }
   &.card-deck {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
