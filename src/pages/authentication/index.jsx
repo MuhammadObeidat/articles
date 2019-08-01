@@ -43,7 +43,7 @@ export default class Authentication extends Component {
         if (canLoggin) {
            window.localStorage.setItem("user", JSON.stringify(canLoggin));
            this.props.history.replace("/articles");
-        } else window.alert("The email handler is not correct !");
+        } else window.alert("The email or password you've entered isn't correct!");
       }
     } catch (e) {
       console.log("e =>", e);

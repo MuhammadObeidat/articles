@@ -27,6 +27,7 @@ const App = () => {
             render={props => (
               <Articles
                 isUserAuthenticated={isUserAuthenticated}
+                user={user}
                 {...props}
               />
             )}
@@ -35,7 +36,11 @@ const App = () => {
             path="/details"
             exact
             render={props => (
-              <Article isUserAuthenticated={isUserAuthenticated} {...props} />
+              <Article
+                isUserAuthenticated={isUserAuthenticated}
+                user={user}
+                {...props}
+              />
             )}
           />
 
@@ -43,7 +48,11 @@ const App = () => {
             path="/cms"
             exact
             render={props => (
-              <Cms isUserAuthenticated={isUserAuthenticated} {...props} />
+              <Cms
+                isUserAuthenticated={isUserAuthenticated}
+                user={user}
+                {...props}
+              />
             )}
           />
         </Switch>

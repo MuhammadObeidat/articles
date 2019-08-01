@@ -20,16 +20,14 @@ export default class Article extends Component {
   }
   
   render() {
-    const { isUserAuthenticated } = this.props;
+    const { isUserAuthenticated, user } = this.props;
     const { article_id } = this.state;
+    const articles = JSON.parse(window.localStorage.getItem("articles")) || [];
+    const article = article_id && articles.find(article => article.id === article_id);
 
     if (!isUserAuthenticated) {
       return <Redirect to="/" />;
     }
-
-    const articles = JSON.parse(window.localStorage.getItem("articles")) || [];
-    const article = article_id && articles.find(article => article.id === article_id);
-
     return (
       <div className="container">
         <div className="article">
@@ -38,6 +36,18 @@ export default class Article extends Component {
               <img className="card-img-top" src={article.image} alt="" />
               <div className="card-body">
                 <h2 className="card-title">{article.title}</h2>
+                {article.date && (
+                  <p className="card-title text-muted">{article.date}</p>
+                )}
+                {article.date && (
+                  <p className="card-title text-muted">
+                    Powered By Author "
+                    <b>
+                      {user.first_name} {user.last_name}
+                    </b>
+                    "
+                  </p>
+                )}
                 <Editor
                   editorState={EditorState.createWithContent(
                     convertFromRaw(JSON.parse(article.desc))

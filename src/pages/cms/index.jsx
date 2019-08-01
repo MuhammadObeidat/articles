@@ -6,7 +6,6 @@ import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { uniqueKeyGenerator } from "../../helpers/uniqueKeyGenerator";
 import { Redirect } from "react-router-dom";
-
 const articles = JSON.parse(window.localStorage.getItem("articles")) || [];
 
 export default class Cms extends PureComponent {
@@ -16,7 +15,8 @@ export default class Cms extends PureComponent {
       image: null,
       description: EditorState.createEmpty(),
       desc: null,
-      decriptionText: ""
+      decriptionText: "",
+      date: new Date().toJSON().slice(0,10).replace(/-/g,'/')
     },
     loading: true,
     isUpdate: false
@@ -31,7 +31,14 @@ export default class Cms extends PureComponent {
       loading: false,
       isUpdate: id ? true : false,
       article: id
-        ? articles.find(article => article.id === id)
+        ? {
+            ...articles.find(article => article.id === id),
+            description: EditorState.createWithContent(
+              convertFromRaw(
+                JSON.parse(articles.find(article => article.id === id).desc)
+              )
+            )
+          }
         : this.state.article
     });
   }
@@ -53,14 +60,14 @@ export default class Cms extends PureComponent {
     const convertTextToRaw = JSON.stringify(convertToRaw(contentState));
     const extractedText = JSON.parse(convertTextToRaw);
     const text = extractedText.blocks.map(el => el.text).join(", ");
-    this.setState({
-      article: {
-        ...this.state.article,
-        description: editorState,
-        desc: JSON.stringify(convertToRaw(contentState)),
-        decriptionText: text
-      }
-    });
+      this.setState({
+        article: {
+          ...this.state.article,
+          description: editorState,
+          desc: JSON.stringify(convertToRaw(contentState)),
+          decriptionText: text
+        }
+      });
   };
   onchangeInputHandler = e => {
     this.setState({
@@ -75,33 +82,45 @@ export default class Cms extends PureComponent {
     e.stopPropagation();
     console.log("articles from storge =>", articles);
     const { article, isUpdate } = this.state;
-    if (isUpdate) {
-      const index = articles.findIndex(e => e.id === article.id);
-      const updatedArticle = [...articles];
-       updatedArticle[index] = article;
+    const {user} = this.props;
+    if (!article.decriptionText) {
+      window.alert("Article description cann't be empty!");
+       return;
+    };
+      if (isUpdate) {
+        const index = articles.findIndex(e => e.id === article.id);
+        const updatedArticle = [...articles];
+        updatedArticle[index] = article;
 
-      window.localStorage.setItem("articles", JSON.stringify(updatedArticle));
-      this.props.history.replace("/articles");
-    } else {
-      let data = [
-        ...articles,
-        { ...article, id: uniqueKeyGenerator(article.title) }
-      ];
-      window.localStorage.setItem("articles", JSON.stringify(data));
-      this.props.history.replace("/articles");
-    }
+        window.localStorage.setItem(
+          "articles",
+          JSON.stringify(updatedArticle)
+        );
+        this.props.history.replace("/articles");
+      } else {
+        let data = [
+          ...articles,
+          {
+            ...article,
+            id: uniqueKeyGenerator(article.title.replace(/\s/g, "")),
+            authorEmail: user.email
+          }
+        ];
+        window.localStorage.setItem("articles", JSON.stringify(data));
+        this.props.history.replace("/articles");
+      }
   };
 
   render() {
     const { article, loading, isUpdate } = this.state;
-     const { isUserAuthenticated } = this.props;
-     if (!isUserAuthenticated) {
-       return <Redirect to="/" />;
-     }
+    const { isUserAuthenticated } = this.props;
+    if (!isUserAuthenticated) {
+      return <Redirect to="/" />;
+    }
     if (loading) {
       return <button>loading</button>;
     }
-     
+
     return (
       <div className="cms-page">
         <h1 className="text-muted">Articles CMS</h1>
@@ -118,6 +137,19 @@ export default class Cms extends PureComponent {
               required
             />
           </div>
+          <div className="form-group">
+            <label>Publish Date</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Date"
+              value={article.date}
+              name="date"
+              required
+              disabled
+            />
+          </div>
+
           <div className="form-group">
             <label className="d-block">Upload Image</label>
             <input
@@ -136,13 +168,7 @@ export default class Cms extends PureComponent {
           )}
 
           <Editor
-            editorState={
-              isUpdate
-                ? EditorState.createWithContent(
-                    convertFromRaw(JSON.parse(article.desc))
-                  )
-                : article.description
-            }
+            editorState={article.description}
             toolbarClassName="toolbarClassName"
             wrapperClassName="wrapperClassName"
             editorClassName="editorClassName"
