@@ -8,37 +8,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-gap: 0.5rem;
-    .card {
-      margin: 15px auto !important;
-      cursor: pointer;
-      .card-body {
-        font-size: 14px;
-        line-height: 18px;
-      }
-      .card-footer {
-        .text-muted {
-          cursor: pointer;
-        }
-      }
-      img {
-        height: 250px;
-        width: 100%;
-        object-fit: cover;
-        border: 1px solid #e3e3e3;
-      }
-      .rdw-editor-toolbar {
-        display: none;
-      }
-      .rdw-editor-main {
-        .rdw-link-decorator-wrapper {
-          &:hover {
-            .rdw-link-decorator-icon {
-              display: none !important;
-            }
-          }
-        }
-      }
-    }
   }
 }
 

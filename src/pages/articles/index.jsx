@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import "./styles.scss";
 import { Redirect } from "react-router-dom";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import Card from "../../components/Card";
 import { uniqueKeyGenerator } from "../../helpers/uniqueKeyGenerator";
-import { cutSentence } from "../../helpers/cutSentence";
 
 export default class Articles extends Component {
   state = {
@@ -43,48 +43,19 @@ export default class Articles extends Component {
     return (
       <div className="container">
         <div className="articles card-deck">
-          {articles.length ? (
+          {articles.length > 0? (
             articles.map((item, index) => {
               return (
-                <div className="card mb-3" key={uniqueKeyGenerator(index)}>
-                  <div onClick={() => this.showArticle(item)}>
-                    <img className="card-img-top" src={item.image} alt="" />
-                    <div className="card-body">
-                      <h5 className="card-title">{item.title}</h5>
-                      <p className="card-title text-muted">
-                        Published: {item.date}
-                      </p>
-                      <p>
-                        {cutSentence(item.decriptionText, true, 200, "...")}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="card-footer d-flex mt-auto">
-                    <span
-                      onClick={() => this.showArticle(item)}
-                      className="text-muted"
-                    >
-                      see more
-                    </span>
-                    {item.authorEmail === user.email && (
-                      <>
-                        <span
-                          onClick={() => this.editArticle(item)}
-                          className="ml-auto text-success"
-                        >
-                          <i className="far fa-edit" />
-                        </span>
-                        <span
-                          onClick={() => this.deleteArticle(index)}
-                          className="ml-auto text-danger"
-                        >
-                          <i className="fas fa-trash-alt" />
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </div>
+                <Card
+                  key={uniqueKeyGenerator(index)}
+                  addArticle={this.addArticle}
+                  showArticle={this.showArticle}
+                  editArticle={this.editArticle}
+                  deleteArticle={this.deleteArticle}
+                  user={user}
+                  card={item}
+                  index={index}
+                />
               );
             })
           ) : (
