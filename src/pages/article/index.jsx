@@ -15,7 +15,6 @@ export default class Article extends Component {
     for (let param of query.entries()) {
       id = param[1];
     }
-    console.log("id =>", id);
     this.setState({ article_id: id });
   }
 

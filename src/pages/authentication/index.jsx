@@ -16,8 +16,6 @@ export default class Authentication extends Component {
     e.preventDefault();
     e.stopPropagation();
     const users = JSON.parse(window.localStorage.getItem("users")) || [];
-    console.log("users xxx =>", users);
-
     try {
       const { isSignup, first_name, last_name, password, email } = this.state;
       const data = {
@@ -41,9 +39,10 @@ export default class Authentication extends Component {
           user => user.email === email && user.password === password
         );
         if (canLoggin) {
-           window.localStorage.setItem("user", JSON.stringify(canLoggin));
-           this.props.history.replace("/articles");
-        } else window.alert("The email or password you've entered isn't correct!");
+          window.localStorage.setItem("user", JSON.stringify(canLoggin));
+          this.props.history.replace("/articles");
+        } else
+          window.alert("The email or password you've entered isn't correct!");
       }
     } catch (e) {
       console.log("e =>", e);
@@ -83,8 +82,8 @@ export default class Authentication extends Component {
       email,
       loading
     } = this.state;
-    const {isUserAuthenticated } = this.props;
-    if(isUserAuthenticated) {
+    const { isUserAuthenticated } = this.props;
+    if (isUserAuthenticated) {
       return <Redirect to="/articles" />;
     }
     const text = isSignup ? "Sign up" : "Login";

@@ -83,7 +83,6 @@ export default class Cms extends PureComponent {
   submitFormHandler = e => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("articles from storge =>", articles);
     const { article, isUpdate } = this.state;
     const { user } = this.props;
     if (!article.decriptionText) {
