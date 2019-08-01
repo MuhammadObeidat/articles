@@ -25,17 +25,13 @@ export default class Articles extends Component {
     const { articles } = this.state;
     const r = window.confirm("Are you sure to delete this article!");
     if (r === true) {
-         const updateArticles = [...articles];
-         updateArticles.splice(index, 1);
-         this.setState({ articles: updateArticles });
-         window.localStorage.setItem(
-           "articles",
-           JSON.stringify(updateArticles)
-         );
+      const updateArticles = [...articles];
+      updateArticles.splice(index, 1);
+      this.setState({ articles: updateArticles });
+      window.localStorage.setItem("articles", JSON.stringify(updateArticles));
     } else {
-     return false;
+      return false;
     }
-
   };
 
   render() {
@@ -50,28 +46,16 @@ export default class Articles extends Component {
           {articles.length ? (
             articles.map((item, index) => {
               return (
-                <div
-                  className="card mb-3"
-                  key={uniqueKeyGenerator(index)}
-                >
+                <div className="card mb-3" key={uniqueKeyGenerator(index)}>
                   <div onClick={() => this.showArticle(item)}>
-                    <img
-                      className="card-img-top"
-                      src={item.image}
-                      alt=""
-                    />
+                    <img className="card-img-top" src={item.image} alt="" />
                     <div className="card-body">
                       <h5 className="card-title">{item.title}</h5>
                       <p className="card-title text-muted">
                         Published: {item.date}
                       </p>
                       <p>
-                        {cutSentence(
-                          item.decriptionText,
-                          true,
-                          200,
-                          "..."
-                        )}
+                        {cutSentence(item.decriptionText, true, 200, "...")}
                       </p>
                     </div>
                   </div>
@@ -87,15 +71,13 @@ export default class Articles extends Component {
                       <>
                         <span
                           onClick={() => this.editArticle(item)}
-                          className="ml-auto text-muted"
+                          className="ml-auto text-success"
                         >
                           <i className="far fa-edit" />
                         </span>
                         <span
-                          onClick={() =>
-                            this.deleteArticle(index)
-                          }
-                          className="ml-auto text-muted"
+                          onClick={() => this.deleteArticle(index)}
+                          className="ml-auto text-danger"
                         >
                           <i className="fas fa-trash-alt" />
                         </span>
