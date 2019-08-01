@@ -16,7 +16,10 @@ export default class Cms extends PureComponent {
       description: EditorState.createEmpty(),
       desc: null,
       decriptionText: "",
-      date: new Date().toJSON().slice(0,10).replace(/-/g,'/')
+      date: new Date()
+        .toJSON()
+        .slice(0, 10)
+        .replace(/-/g, "/")
     },
     loading: true,
     isUpdate: false
@@ -60,14 +63,14 @@ export default class Cms extends PureComponent {
     const convertTextToRaw = JSON.stringify(convertToRaw(contentState));
     const extractedText = JSON.parse(convertTextToRaw);
     const text = extractedText.blocks.map(el => el.text).join(", ");
-      this.setState({
-        article: {
-          ...this.state.article,
-          description: editorState,
-          desc: JSON.stringify(convertToRaw(contentState)),
-          decriptionText: text
-        }
-      });
+    this.setState({
+      article: {
+        ...this.state.article,
+        description: editorState,
+        desc: JSON.stringify(convertToRaw(contentState)),
+        decriptionText: text
+      }
+    });
   };
   onchangeInputHandler = e => {
     this.setState({
@@ -82,33 +85,31 @@ export default class Cms extends PureComponent {
     e.stopPropagation();
     console.log("articles from storge =>", articles);
     const { article, isUpdate } = this.state;
-    const {user} = this.props;
+    const { user } = this.props;
     if (!article.decriptionText) {
       window.alert("Article description cann't be empty!");
-       return;
-    };
-      if (isUpdate) {
-        const index = articles.findIndex(e => e.id === article.id);
-        const updatedArticle = [...articles];
-        updatedArticle[index] = article;
+      return;
+    }
+    if (isUpdate) {
+      const index = articles.findIndex(e => e.id === article.id);
+      const updatedArticle = [...articles];
+      updatedArticle[index] = article;
 
-        window.localStorage.setItem(
-          "articles",
-          JSON.stringify(updatedArticle)
-        );
-        this.props.history.replace("/articles");
-      } else {
-        let data = [
-          ...articles,
-          {
-            ...article,
-            id: uniqueKeyGenerator(article.title.replace(/\s/g, "")),
-            authorEmail: user.email
-          }
-        ];
-        window.localStorage.setItem("articles", JSON.stringify(data));
-        this.props.history.replace("/articles");
-      }
+      window.localStorage.setItem("articles", JSON.stringify(updatedArticle));
+      this.props.history.replace("/articles");
+    } else {
+      let data = [
+        ...articles,
+        {
+          ...article,
+          id: uniqueKeyGenerator(article.title.replace(/\s/g, "")),
+          authorEmail: user.email,
+          authorName: `${user.first_name} ${user.last_name}`
+        }
+      ];
+      window.localStorage.setItem("articles", JSON.stringify(data));
+      this.props.history.replace("/articles");
+    }
   };
 
   render() {

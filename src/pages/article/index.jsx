@@ -7,23 +7,24 @@ import { Editor } from "react-draft-wysiwyg";
 
 export default class Article extends Component {
   state = {
-    article_id:null
-  }
+    article_id: null
+  };
   componentDidMount() {
     const query = new URLSearchParams(this.props.location.search);
     let id = "";
     for (let param of query.entries()) {
       id = param[1];
-     }
-     console.log("id =>", id);
-     this.setState({article_id:id});
+    }
+    console.log("id =>", id);
+    this.setState({ article_id: id });
   }
-  
+
   render() {
     const { isUserAuthenticated, user } = this.props;
     const { article_id } = this.state;
     const articles = JSON.parse(window.localStorage.getItem("articles")) || [];
-    const article = article_id && articles.find(article => article.id === article_id);
+    const article =
+      article_id && articles.find(article => article.id === article_id);
 
     if (!isUserAuthenticated) {
       return <Redirect to="/" />;
@@ -41,11 +42,7 @@ export default class Article extends Component {
                 )}
                 {article.date && (
                   <p className="card-title text-muted">
-                    Powered By Author "
-                    <b>
-                      {user.first_name} {user.last_name}
-                    </b>
-                    "
+                    Powered By Author "<b>{article.authorName}</b>"
                   </p>
                 )}
                 <Editor
